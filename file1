@@ -3,3 +3,6 @@ public class HaiWorld {
         System.out.println("Hello, World!");
     }
 }
+
+public class HaiWorld {
+   
