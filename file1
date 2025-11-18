@@ -1,2 +1,5 @@
-Hi this is the file1 data
-2nd line
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}
