@@ -1,6 +1,6 @@
 import java.util.Scanner; // Import the Scanner class to read input
 
-public class AddNumbers {
+public class AddNumbersalso {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in); // Create a Scanner object
 
