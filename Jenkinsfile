@@ -1,15 +1,15 @@
 pipeline {
     agent any
+
     stages {
-        stage('Hello') {
+        stage('Build') {
             steps {
-                echo "Hello from ${env.BRANCH_NAME}"
+                echo "Building branch: ${env.BRANCH_NAME}"
             }
         }
-     
-        stage('Hello') {
+        stage('Test') {
             steps {
-                echo "Hello from ${env.BRANCH_NAME}"
+                echo "Running tests on ${env.BRANCH_NAME}"
             }
         }
     }
