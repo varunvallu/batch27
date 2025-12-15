@@ -1,0 +1,4 @@
+---
+# vars file for tomcat
+tomcat_tarball_url: "https://dlcdn.apache.org/tomcat/tomcat-9/v{{ tomcat_version }}/bin/apache-tomcat-{{ tomcat_version }}.tar.gz"
+

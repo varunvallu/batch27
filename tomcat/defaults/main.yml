@@ -1,0 +1,10 @@
+---
+# defaults file for tomcat
+tomcat_version: 9.0.113
+tomcat_install_dir: "/opt/tomcat"
+tomcat_symlink: "/opt/tomcat/latest"
+
+tomcat_manager_user: admin
+tomcat_manager_password: admin
+
+java_package: java-17-amazon-corretto-devel

@@ -1,0 +1,84 @@
+---
+# tasks file for tomcat
+- name: Install required packages
+  yum:
+    name:
+      - "{{ java_package }}"
+      - wget
+      - tar
+    state: present
+
+- name: Create Tomcat installation directory
+  file:
+    path: "{{ tomcat_install_dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Download Apache Tomcat
+  get_url:
+    url: "{{ tomcat_tarball_url }}"
+    dest: "/tmp/apache-tomcat-{{ tomcat_version }}.tar.gz"
+
+- name: Extract Apache Tomcat
+  unarchive:
+    src: "/tmp/apache-tomcat-{{ tomcat_version }}.tar.gz"
+    dest: "{{ tomcat_install_dir }}"
+    remote_src: yes
+    creates: "{{ tomcat_install_dir }}/apache-tomcat-{{ tomcat_version }}"
+
+- name: Symlink Tomcat latest
+  file:
+    src: "{{ tomcat_install_dir }}/apache-tomcat-{{ tomcat_version }}"
+    dest: "{{ tomcat_symlink }}"
+    state: link
+    force: yes
+
+- name: Create Tomcat group
+  group:
+    name: tomcat
+
+- name: Create Tomcat user
+  user:
+    name: tomcat
+    home: "{{ tomcat_symlink }}"
+    shell: /bin/false
+    group: tomcat
+
+- name: Set permissions
+  file:
+    path: "{{ tomcat_symlink }}"
+    owner: tomcat
+    group: tomcat
+    recurse: yes
+    state: directory
+
+- name: Deploy systemd service
+  template:
+    src: tomcat.service.j2
+    dest: /etc/systemd/system/tomcat.service
+  notify:
+    - Reload systemd
+    - Restart Tomcat
+
+- name: Deploy Tomcat users config
+  template:
+    src: tomcat-users.xml.j2
+    dest: "{{ tomcat_symlink }}/conf/tomcat-users.xml"
+    owner: tomcat
+    group: tomcat
+
+- name: Deploy manager context
+  template:
+    src: manager-context.xml.j2
+    dest: "{{ tomcat_symlink }}/webapps/manager/META-INF/context.xml"
+
+- name: Deploy host-manager context
+  template:
+    src: host-manager-context.xml.j2
+    dest: "{{ tomcat_symlink }}/webapps/host-manager/META-INF/context.xml"
+
+- name: Enable and start Tomcat
+  systemd:
+    name: tomcat
+    enabled: yes
+    state: started
